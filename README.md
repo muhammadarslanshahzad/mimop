@@ -14,7 +14,9 @@ Instead of silent chores, it turns cleaning into a game 🎮 with XP, challenges
 ---
 ## Project Description
 
+
 Cleaning is boring. Robots are usually boring too. MiMoMop changes that. It mixes **robotics + AI + humor + gamification** to make cleaning fun and interactive. It remembers your habits, adapts its humor, and gently nudges you to keep your space tidy while doing all the work itself. Think of it as a tiny, opinionated roommate that never complains but always keeps your space clean.
+
 ---
 
 ## Features
