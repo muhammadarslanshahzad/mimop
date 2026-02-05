@@ -1,0 +1,374 @@
+#VRML_SIM R2023b utf8
+
+PROTO MiMoMop [
+  field SFVec3f    translation  0 0 0
+  field SFRotation rotation     0 0 1 0
+  field SFString   name         "MiMoMop"
+  field SFString   controller   "mimomop_controller"
+]
+{
+  Robot {
+    translation IS translation
+    rotation IS rotation
+    name IS name
+    controller IS controller
+    children [
+      # Robot Body
+      Shape {
+        appearance PBRAppearance {
+          baseColor 0.2 0.6 0.9
+          metalness 0.3
+          roughness 0.7
+        }
+        geometry Cylinder {
+          height 0.12
+          radius 0.15
+        }
+      }
+      
+      # Top Cover (personality indicator)
+      Transform {
+        translation 0 0 0.07
+        children [
+          Shape {
+            appearance PBRAppearance {
+              baseColor 0.1 0.1 0.1
+              metalness 0.8
+              roughness 0.2
+            }
+            geometry Cylinder {
+              height 0.02
+              radius 0.16
+            }
+          }
+        ]
+      }
+      
+      # LED Indicator (eyes)
+      Transform {
+        translation 0.1 0 0.05
+        children [
+          Shape {
+            appearance PBRAppearance {
+              baseColor 0.0 1.0 0.5
+              emissiveColor 0.0 1.0 0.5
+            }
+            geometry Sphere {
+              radius 0.015
+            }
+          }
+        ]
+      }
+      Transform {
+        translation -0.1 0 0.05
+        children [
+          Shape {
+            appearance PBRAppearance {
+              baseColor 0.0 1.0 0.5
+              emissiveColor 0.0 1.0 0.5
+            }
+            geometry Sphere {
+              radius 0.015
+            }
+          }
+        ]
+      }
+      
+      # Left Wheel
+      HingeJoint {
+        jointParameters HingeJointParameters {
+          position 0
+          axis 0 1 0
+          anchor 0 0.17 -0.04
+        }
+        device [
+          RotationalMotor {
+            name "left_motor"
+            maxVelocity 10
+            maxTorque 10
+          }
+        ]
+        endPoint Solid {
+          translation 0 0.17 -0.04
+          rotation 1 0 0 1.5708
+          children [
+            Shape {
+              appearance PBRAppearance {
+                baseColor 0.1 0.1 0.1
+                metalness 0.5
+                roughness 0.5
+              }
+              geometry Cylinder {
+                height 0.03
+                radius 0.04
+              }
+            }
+          ]
+          name "left_wheel"
+          boundingObject Cylinder {
+            height 0.03
+            radius 0.04
+          }
+          physics Physics {
+            density -1
+            mass 0.05
+          }
+        }
+      }
+      
+      # Right Wheel
+      HingeJoint {
+        jointParameters HingeJointParameters {
+          position 0
+          axis 0 1 0
+          anchor 0 -0.17 -0.04
+        }
+        device [
+          RotationalMotor {
+            name "right_motor"
+            maxVelocity 10
+            maxTorque 10
+          }
+        ]
+        endPoint Solid {
+          translation 0 -0.17 -0.04
+          rotation 1 0 0 1.5708
+          children [
+            Shape {
+              appearance PBRAppearance {
+                baseColor 0.1 0.1 0.1
+                metalness 0.5
+                roughness 0.5
+              }
+              geometry Cylinder {
+                height 0.03
+                radius 0.04
+              }
+            }
+          ]
+          name "right_wheel"
+          boundingObject Cylinder {
+            height 0.03
+            radius 0.04
+          }
+          physics Physics {
+            density -1
+            mass 0.05
+          }
+        }
+      }
+      
+      # Caster Wheel (front support)
+      Solid {
+        translation 0.12 0 -0.06
+        children [
+          Shape {
+            appearance PBRAppearance {
+              baseColor 0.3 0.3 0.3
+              metalness 0.2
+              roughness 0.8
+            }
+            geometry Sphere {
+              radius 0.02
+            }
+          }
+        ]
+        name "caster_front"
+        boundingObject Sphere {
+          radius 0.02
+        }
+        physics Physics {
+          density -1
+          mass 0.01
+        }
+      }
+      
+      # Caster Wheel (back support)
+      Solid {
+        translation -0.12 0 -0.06
+        children [
+          Shape {
+            appearance PBRAppearance {
+              baseColor 0.3 0.3 0.3
+              metalness 0.2
+              roughness 0.8
+            }
+            geometry Sphere {
+              radius 0.02
+            }
+          }
+        ]
+        name "caster_back"
+        boundingObject Sphere {
+          radius 0.02
+        }
+        physics Physics {
+          density -1
+          mass 0.01
+        }
+      }
+      
+      # Lidar Sensor
+      Transform {
+        translation 0 0 0.09
+        children [
+          Lidar {
+            name "lidar"
+            horizontalResolution 360
+            fieldOfView 6.28
+            verticalFieldOfView 0.1
+            numberOfLayers 1
+            minRange 0.05
+            maxRange 5.0
+          }
+        ]
+      }
+      
+      # Camera
+      Transform {
+        translation 0.14 0 0.03
+        rotation 0 0 1 0
+        children [
+          Camera {
+            name "camera"
+            fieldOfView 1.57
+            width 640
+            height 480
+          }
+        ]
+      }
+      
+      # GPS
+      GPS {
+        name "gps"
+      }
+      
+      # Compass
+      Compass {
+        name "compass"
+      }
+      
+      # Distance Sensors (8 around the perimeter)
+      Transform {
+        translation 0.15 0 0.02
+        rotation 0 0 1 0
+        children [
+          DistanceSensor {
+            name "ds0"
+            lookupTable [
+              0 0 0
+              0.1 100 0
+              1.0 1000 0
+            ]
+          }
+        ]
+      }
+      Transform {
+        translation 0.106 0.106 0.02
+        rotation 0 0 1 0.785
+        children [
+          DistanceSensor {
+            name "ds1"
+            lookupTable [
+              0 0 0
+              0.1 100 0
+              1.0 1000 0
+            ]
+          }
+        ]
+      }
+      Transform {
+        translation 0 0.15 0.02
+        rotation 0 0 1 1.57
+        children [
+          DistanceSensor {
+            name "ds2"
+            lookupTable [
+              0 0 0
+              0.1 100 0
+              1.0 1000 0
+            ]
+          }
+        ]
+      }
+      Transform {
+        translation -0.106 0.106 0.02
+        rotation 0 0 1 2.356
+        children [
+          DistanceSensor {
+            name "ds3"
+            lookupTable [
+              0 0 0
+              0.1 100 0
+              1.0 1000 0
+            ]
+          }
+        ]
+      }
+      Transform {
+        translation -0.15 0 0.02
+        rotation 0 0 1 3.14
+        children [
+          DistanceSensor {
+            name "ds4"
+            lookupTable [
+              0 0 0
+              0.1 100 0
+              1.0 1000 0
+            ]
+          }
+        ]
+      }
+      Transform {
+        translation -0.106 -0.106 0.02
+        rotation 0 0 1 -2.356
+        children [
+          DistanceSensor {
+            name "ds5"
+            lookupTable [
+              0 0 0
+              0.1 100 0
+              1.0 1000 0
+            ]
+          }
+        ]
+      }
+      Transform {
+        translation 0 -0.15 0.02
+        rotation 0 0 1 -1.57
+        children [
+          DistanceSensor {
+            name "ds6"
+            lookupTable [
+              0 0 0
+              0.1 100 0
+              1.0 1000 0
+            ]
+          }
+        ]
+      }
+      Transform {
+        translation 0.106 -0.106 0.02
+        rotation 0 0 1 -0.785
+        children [
+          DistanceSensor {
+            name "ds7"
+            lookupTable [
+              0 0 0
+              0.1 100 0
+              1.0 1000 0
+            ]
+          }
+        ]
+      }
+    ]
+    boundingObject Cylinder {
+      height 0.12
+      radius 0.15
+    }
+    physics Physics {
+      density -1
+      mass 1.5
+    }
+  }
+}
